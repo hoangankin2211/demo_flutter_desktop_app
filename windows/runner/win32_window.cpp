@@ -102,9 +102,40 @@ Win32Window::~Win32Window() {
   Destroy();
 }
 
+bool CheckOneInstance()
+{
+
+    HANDLE  m_hStartEvent = CreateEventW( NULL, FALSE, FALSE, L"Global\\yourpackage" );
+
+    if(m_hStartEvent == NULL)
+    {
+        CloseHandle( m_hStartEvent );
+        return false;
+    }
+
+
+    if (GetLastError() == ERROR_ALREADY_EXISTS) {
+
+        CloseHandle( m_hStartEvent );
+        m_hStartEvent = NULL;
+        // already exist
+        // send message from here to existing copy of the application
+        return false;
+    }
+    // the only instance, start in a usual way
+    return true;
+}
+
 bool Win32Window::CreateAndShow(const std::wstring& title,
                                 const Point& origin,
                                 const Size& size) {
+
+HWND handle=FindWindowA(NULL, "demo_flutter_desktop");
+
+  if (!CheckOneInstance()){
+    ShowWindow(handle,SW_RESTORE);
+    return false;
+  }
   Destroy();
 
   const wchar_t* window_class =
