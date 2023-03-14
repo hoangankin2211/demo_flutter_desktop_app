@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package github;
+
+service GitHubRoute {
+    rpc getListError(Integer) returns (Integer){};
+
+    rpc listFeatures(Integer) returns (Integer){};
+
+    rpc RecordRoute(Integer) returns (Integer){};
+}   
+
+message Integer {
+    int32 data = 1;
+}
